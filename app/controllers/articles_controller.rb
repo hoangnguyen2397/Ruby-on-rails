@@ -1,9 +1,11 @@
 class ArticlesController < ApplicationController
-
-  http_basic_authenticate_with name: "user", password: "pass", except: [:index, :show] 
+  # set up a controller with user authentication
+  before_action :set_article, only: [:show, :edit, :update, :destroy]
 
   def index
     @articles = Article.all
+    authorize @articles
+    # The authorize method automatically infers that Article will have a matching ArticlePolicy class, and instantiates this class, handing in the current user and the given record.
   end
 
   def show
@@ -12,10 +14,14 @@ class ArticlesController < ApplicationController
 
   def new
     @article = Article.new
+    authorize @article
   end
 
   def create
     @article = Article.new(article_params)
+    # For the current signed-in user
+    @article.user = current_user
+    authorize @article
 
     if @article.save
       redirect_to @article
@@ -46,8 +52,12 @@ class ArticlesController < ApplicationController
   end
 
   private
-  def article_params
-    params.require(:article).permit(:title, :body, :status)
-  end
+    def set_article
+      @article = Article.find(params[:id])
+      authorize @article
+    end
 
+    def article_params
+      params.require(:article).permit(:title, :body, :status, :user_id)
+    end
 end
