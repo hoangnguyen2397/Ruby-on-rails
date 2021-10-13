@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
     include Pundit
-
+    
+    # Rescuing a denied Authorization in Rails
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
     
     private
