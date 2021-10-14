@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "Articles", type: :request do
-  
   let(:valid_attributes) do
     {
       'id' => '1',
@@ -11,21 +10,22 @@ RSpec.describe "Articles", type: :request do
     }
   end
 
-  describe "GET /index" do
+  describe "GET articles" do
     it 'renders a successful response' do
       article = Article.new(valid_attributes)
       article.save
-      get articles_path
+      #debugger
+      get '/articles'
       expect(response).to be_successful
     end
   end
 
   describe 'GET /new' do
     it 'renders a successful response' do
-      user = User.new(email: "example@example.com", password: "Test123")
-      sign_in user
+      user = create(:user)
+      login_as user
       get new_article_path
-      expect(response).to   
+      expect(response).to be_successful
     end
   end
 
