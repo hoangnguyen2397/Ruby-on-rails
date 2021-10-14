@@ -36,7 +36,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'minitest'
-  gem 'factory_bot'
+  gem 'factory_bot_rails'
 end
 
 group :development do

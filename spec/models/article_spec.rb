@@ -1,14 +1,5 @@
 require 'rails_helper'
 
-FactoryBot.define do
-  factory :article do
-    title { 'test article' }
-    body { "This is test article" }
-    status { 'public' }
-    user_id {1}
-  end
-end
-
 RSpec.describe Article, type: :model do
     describe "Associations" do
       it "belongs to user" do
@@ -22,7 +13,7 @@ end
 
 RSpec.describe Article, type: :model do
   describe "Validations" do
-    subject { FactoryBot.create :article }
+    subject { create(:article) }
     
     it 'is valid with valid attributes' do
       is_expected.to be_valid
