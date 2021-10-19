@@ -25,8 +25,8 @@ module Api
         class ArticlesController < ApplicationController
             def index
                 @articles = Article.all
-                # render json: @articles
-                render json: @articles.to_json(include: [comments: {}])
+                render json: @articles
+                # render json: @articles.to_json(include: [comments: {}])
             end
 
             def show
