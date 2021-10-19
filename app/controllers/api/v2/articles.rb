@@ -7,6 +7,9 @@ module Api
             format :json
 
             helpers do
+                def article_params
+                    declared(params)
+                end
             end
 
             resource :articles do
@@ -35,7 +38,7 @@ module Api
                     requires :user_id, type: Integer
                 end
                 post do
-                    Article.create!(title: params[:title], body: params[:body], status: params[:status], user_id: params[:user_id])
+                    Article.create!(article_params)
                 end
 
                 desc 'Update an article'
@@ -46,7 +49,7 @@ module Api
                     optional :status, type: String
                 end
                 put ':id' do
-                    Article.find(params[:id]).update(title: params[:title], body: params[:body], status: params[:status])
+                    Article.find(params[:id]).update(article_params)
                 end
 
                 desc "Delete article"
