@@ -24,6 +24,9 @@ gem 'jbuilder', '~> 2.7'
 gem 'pundit'
 gem 'devise'
 gem 'active_model_serializers', '~> 0.10.12'
+gem 'grape'
+gem 'grape-entity'
+gem 'grape_on_rails_routes'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -38,6 +41,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'minitest'
   gem 'factory_bot_rails'
+  gem 'rspec-json_expectations'
 end
 
 group :development do
