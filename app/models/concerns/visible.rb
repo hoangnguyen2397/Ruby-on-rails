@@ -20,4 +20,8 @@ module Visible
     def private?
         status == 'private'
     end
+
+    def public?
+        status == 'public'
+    end
 end
