@@ -34,32 +34,32 @@ module Api
                 render json: @article
             end
 
-            def create
-                @article = Article.new(article_params)
-                if @article.save
-                    # ArticleJob.set(wait: 1.minute).perform_later(@article)
-                    ArticleWorker.set(wait: 1.minute).perform_async(@article.id)
-                    # ArticleWorker.perform_in(1.minute, @article.id)
-                    render json: @article
-                else
-                    render json: @article.errors
-                end
-            end
-
             # def create
-            #     @article = Articles::CreateArticle.call(
-            #         title: params[:title],
-            #         body: params[:body],
-            #         status: params[:status],
-            #         user_id: params[:user_id]
-            #     )
+            #     @article = Article.new(article_params)
             #     if @article.save
+            #         # ArticleJob.set(wait: 1.minute).perform_later(@article)
             #         ArticleWorker.set(wait: 1.minute).perform_async(@article.id)
+            #         # ArticleWorker.perform_in(1.minute, @article.id)
             #         render json: @article
             #     else
             #         render json: @article.errors
             #     end
             # end
+
+            def create
+                @article = Articles::CreateArticle.call(
+                    title: params[:title],
+                    body: params[:body],
+                    status: params[:status],
+                    user_id: params[:user_id]
+                )
+                if @article.save
+                    ArticleWorker.set(wait: 1.minute).perform_async(@article.id)
+                    render json: @article
+                else
+                    render json: @article.errors
+                end
+            end
 
             def destroy
                 @article = Article.find(params[:id])
