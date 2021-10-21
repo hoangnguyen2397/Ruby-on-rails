@@ -11,6 +11,15 @@ module Blog
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 
+    config.active_job.queue_adapter = :sidekiq
+    # assign queue to sidekiq
+
+    config.cache_store = :redis_store, {
+      host: "localhost",
+      port: 6379,
+      db: 0,
+    }, {expires_in: 7.days}
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

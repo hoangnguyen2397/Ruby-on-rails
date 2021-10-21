@@ -28,6 +28,11 @@ gem 'grape'
 gem 'grape-entity'
 gem 'grape_on_rails_routes'
 
+gem 'sidekiq', '~> 6.2', '>= 6.2.2'
+gem 'redis-rails'
+
+gem 'whenever', require: false
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
@@ -61,6 +66,8 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+
+  gem 'rspec-sidekiq'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
