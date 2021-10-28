@@ -87,3 +87,15 @@ end
 ```
 
     - At my blog app, I can access with the code changes.
+
+- Kafka in blog, I add a method in EH project to check whether data can sync with kafka server
+
+```
+class MembersResponder < Karafka::BaseResponder
+    topic :users
+
+    def respond(user)
+      respond_to :users, user
+    end
+end
+```

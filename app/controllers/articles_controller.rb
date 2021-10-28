@@ -26,6 +26,7 @@ class ArticlesController < ApplicationController
     if @article.save
       ArticleJob.set(wait: 1.minute).perform_later(@article)
       # ArticleJob.set(wait: 1.hour).perform_later(@article)
+      CreateArticlesResponder.call(@article)
       redirect_to @article
     else
       render :new
