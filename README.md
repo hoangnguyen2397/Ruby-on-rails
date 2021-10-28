@@ -86,4 +86,51 @@ def member?(member = current_member)
 end
 ```
 
+- Write unit test for check method
+
+```
+describe RpcHandler::CheckMemberIsExistHandler do
+    let(:service) {
+        RpcHandler::CheckMemberIsExistHandler.new(request, {})
+    }
+
+    describe '#check_member_is_exist' do
+        let!(:member) { create(:member) }
+        let(:request) {
+            EhProtobuf::EmploymentHero::CheckMemberIsExistRequest.new(
+                email: email
+        )}
+        let(:response) { service.call }
+
+        context 'not found member' do
+            let(:email) { Faker::Internet.email }
+
+            it 'raises exception' do
+              expect(response).to be_a EhProtobuf::NotFoundError
+            end
+        end
+
+        context 'valid request' do
+            let(:email) { member.personal_email }
+            let(:member_uuid) { member.uuid }
+
+            before do
+                expect_any_instance_of(
+                  AccountPolicy
+                ).to receive(:member?).and_return(true)
+              end
+
+            it 'returns response' do
+                expect(response).to be_a(EhProtobuf::EmploymentHero::CheckMemberIsExistResponse)
+            end
+
+            it 'returns data' do
+                expect(response.member_id).to eq(member.uuid)
+                expect(response.is_member_existed).to eq(true)
+            end
+        end
+    end
+end
+```
+
     - At my blog app, I can access with the code changes.
