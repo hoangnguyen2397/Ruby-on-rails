@@ -1,19 +1,31 @@
 class UsersConsumer < ApplicationConsumer
     def consume
-        params_batch.each do |params|
+        # Karafka.logger.info "New [User] event: #{params.topic}"
+        # puts "\n"
+        # Karafka.logger.info "New [Payload] event: #{params.payload}"
 
-            params_json = params.to_json
+        # payload = params.payload
 
-            Karafka.logger.info "New [User] event: #{params_json}"
+        # message = {
+        #     'topic_type' => params.topic,
+        #     'event' => 'create',
+        #     'user_id' => payload['user_id'],
+        #     'data' => {
+        #         'email' => payload['personal_email'],
+        #         'password' => 123456,
+        #     }
+        # }
 
-            user = JSON.parse(params_json)
+        message = params.payload
+        message['topic_type'] = params.topic
 
-            Karafka.logger.info "New [User] value: #{user}"
+        puts message
+        # debugger
+        KafkaHandleEvent.handle_event(message)
+    rescue ActiveRecord::RecordNotUnique => e
+        Rails.logger.error("ERROR in #{self.class.name}#consume: #{e.message}")
+    rescue ActiveRecord::ActiveRecordError => e
+        Rails.logger.error("ERROR in #{self.class.name}#consume: #{e.message}")
 
-            user_id = user['raw_payload']
-
-            Karafka.logger.info "New [User_id] value: #{user_id}"
-
-        end
     end
 end

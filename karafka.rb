@@ -19,7 +19,6 @@ class KarafkaApp < Karafka::App
     config.kafka.seed_brokers = %w[kafka://127.0.0.1:9092]
     config.client_id = 'blog_app'
     config.backend = :inline
-    config.batch_consuming = true
     # config.logger = Rails.logger
   end
 
@@ -45,19 +44,10 @@ class KarafkaApp < Karafka::App
   consumer_groups.draw do
     topic :users do
       consumer UsersConsumer
-      # responder UsersResponder
     end
 
-    topic :create_article do
-      consumer CreateArticlesConsumer
-    end
-    
-    # topic :user_created do
-    #   consumer NewUserConsumer
-    # end
-
-    # topic :example do
-    #   consumer ExampleConsumer
+    # topic :create_article do
+    #   consumer CreateArticlesConsumer
     # end
 
     # consumer_group :bigger_group do

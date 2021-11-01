@@ -127,14 +127,22 @@ describe RpcHandler::CheckMemberIsExistHandler do
 end
 ```
 
-- Kafka in blog, I add a method in EH project to check whether data can sync with kafka server
+- With Kafka service, define UserResponder in main-app to produce topic 'user' to public message.
 
 ```
-class MembersResponder < Karafka::BaseResponder
+class UsersResponder < Karafka::BaseResponder
     topic :users
 
     def respond(user)
-      respond_to :users, user
+      user_create = {
+        'event' => 'create',
+        'user_id' => user.user_id,
+        'data' => {
+            'email' => user.personal_email,
+            'password' => 123456,
+        }
+      }
+      respond_to :users, user_create
     end
 end
 ```
