@@ -33,13 +33,15 @@ gem 'redis-rails'
 
 gem 'whenever', require: false
 
-# source 'https://gem.fury.io/eh-devops/' do
-#   gem 'eh_protobuf', '~> 1.9.0'
-#   gem 'eh_protobuf_core', '~> 2.0.0'
-# end
+source 'https://gem.fury.io/eh-devops/' do
+  # gem 'kafka_handle_event'
+end
 
 gem 'eh_protobuf', path: '/Users/hoangnguyen/Documents/EH-project/grpc_proto'
 gem 'eh_protobuf_core', path: '/Users/hoangnguyen/Documents/EH-project/eh-protobuf-core'
+gem 'kafka_handle_event', path: '/Users/hoangnguyen/Documents/EH-project/kafka_handle_event'
+
+gem 'karafka'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
