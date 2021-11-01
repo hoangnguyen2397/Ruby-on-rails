@@ -25,9 +25,7 @@ Things you may want to cover:
 
 Practice with Eh Protobuf at my local.
 
-- Create RPC at EhProtobuf: Create CheckMemberIsExist to use in here.
-
-  - At grpc_proto/protos/employment_hero/member.proto to create Request & Response message
+- Grpc define protocol buffer
 
 ```
 message CheckMemberIsExistRequest {
@@ -40,8 +38,6 @@ message CheckMemberIsExistResponse {
 }
 ```
 
-    - At grpc_proto/protos/employment_hero.proto create RPC
-
 ```
   rpc CheckMemberIsExist (
     EhProtobuf.EmploymentHero.CheckMemberIsExistRequest
@@ -50,7 +46,7 @@ message CheckMemberIsExistResponse {
   ) {}
 ```
 
-    - At EH project: Create CheckMemberIsExistHandler.
+- Define handler at RPC Server side
 
 ```
 module RpcHandler
@@ -78,15 +74,58 @@ module RpcHandler
 end
 ```
 
-    - At AccountPolicy, create member? method to check if member is existed in database
-
 ```
 def member?(member = current_member)
     member.present?
 end
 ```
 
-    - At my blog app, I can access with the code changes.
+- Write spec for CheckMemberIsExistHandler
+
+```
+describe RpcHandler::CheckMemberIsExistHandler do
+    let(:service) {
+        RpcHandler::CheckMemberIsExistHandler.new(request, {})
+    }
+
+    describe '#check_member_is_exist' do
+        let!(:member) { create(:member) }
+        let(:request) {
+            EhProtobuf::EmploymentHero::CheckMemberIsExistRequest.new(
+                email: email
+        )}
+        let(:response) { service.call }
+
+        context 'not found member' do
+            let(:email) { Faker::Internet.email }
+
+            it 'raises exception' do
+              expect(response).to be_a EhProtobuf::NotFoundError
+            end
+        end
+
+        context 'valid request' do
+            let(:email) { member.personal_email }
+            let(:member_uuid) { member.uuid }
+
+            before do
+                expect_any_instance_of(
+                  AccountPolicy
+                ).to receive(:member?).and_return(true)
+              end
+
+            it 'returns response' do
+                expect(response).to be_a(EhProtobuf::EmploymentHero::CheckMemberIsExistResponse)
+            end
+
+            it 'returns data' do
+                expect(response.member_id).to eq(member.uuid)
+                expect(response.is_member_existed).to eq(true)
+            end
+        end
+    end
+end
+```
 
 - Kafka in blog, I add a method in EH project to check whether data can sync with kafka server
 

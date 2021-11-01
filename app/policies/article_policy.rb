@@ -5,11 +5,20 @@ class ArticlePolicy < ApplicationPolicy
 
     def create?
         member_email = user.email if user.present?
+
         response = EhProtobuf::EmploymentHero::Client.check_member_is_exist(
             email: member_email
         )
-        JSON.parse(response.to_json)['rpc_response'].blank?
-        # puts JSON.parse(response.to_json)
+
+        if response.success?
+            puts response.result
+            puts "User_id: #{response.result.member_id}"
+            puts "Is_member_existed: #{response.result.is_member_existed}"
+        else
+            puts response.errors
+        end
+
+        response.success?
     end
 
     def update?
